@@ -1,26 +1,25 @@
-#kubectl api-resources
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: postgre
 spec:
   selector:
     matchLabels:
       app: postgre
-    template:
-      metadata:
-        labels:
-          app: postgre
-      spec:
-        containers:
-        - name: postgre
-          image: postgres:13.16
-          ports:
-          - containerPort: 5432
-          env:
-          - name: POSTGRES_USER
-            value: ecommerce
-          - name: POSTGRES_PASSWORD
-            value: Pg1234
-          - name: POSTGRES_DB
-            value: ecommerce
+  template:
+    metadata:
+      labels:
+        app: postgre
+    spec:
+      containers:
+      - name: postgre
+        image: postgres:13.16
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: ecommerce
+        - name: POSTGRES_PASSWORD
+          value: Pg1234
+        - name: POSTGRES_DB
+          value: ecommerce
