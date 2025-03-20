@@ -1,6 +1,5 @@
-#kubectl api-resources
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: postgre
 spec:
@@ -26,6 +25,7 @@ spec:
           value: ecommerce
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -39,8 +39,8 @@ spec:
 
 ---
 
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: fakeshop
 spec:
@@ -53,29 +53,32 @@ spec:
         app: fakeshop
     spec:
       containers:
-      - name: fakeshop
-        image: benattee/fakeshop-test:v1
-        ports:
-        - containerPort: 5000
-        env:
-        - name: DB_HOST
-          value: postgre
-        - name: DB_USER
-          value: ecommerce
-        - name: DB_PASSWORD
-          value: Pg1234
-        - name: DB_NAME
-          value: ecommerce
-        - name: FLASK_APP
-          value: index.py
+        - name: fakeshop
+          image: benattee/fakeshop-test:v2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: postgre
+            - name: DB_USER
+              value: ecommerce
+            - name: DB_PASSWORD
+              value: Pg1234
+            - name: DB_NAME
+              value: ecommerce
+            - name: FLASK_APP
+              value: index.py
+
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
   name: fakeshop
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 5000
+    - port: 80
+      targetPort: 5000
   selector:
     app: fakeshop
