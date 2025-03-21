@@ -22,13 +22,27 @@ jobs:
           context: ./src
           push: true
           file: ./src/Dockerfile
-          tags: benattee/fakeshop-test:v${{ github.run_number }}
+          tags: |
+            benattee/fakeshop-test:v${{ github.run_number }}
+            benattee/fakeshop-test
           
   CD:
     needs: [CI]
     runs-on: ubuntu-latest
     steps:
-      -  run: echo "Obter código"
-      -  run: echo "Configurar o Kubeconfig"
-      -  run: echo "Executar o Apply"
+      - name: Obter codigo
+        uses: actions/checkout@v4.2.2
+      - name: Aplicando o KubeConfig
+        uses: azure/k8s-set-context@v4
+        with:
+           method: kubeconfig
+           kubeconfig: ${{ secrets.K8S_KUBECONFIG }}
+            -  run: echo "Executar o Apply"
+      - name: Fazendo o Deploy
+        uses: Azure/k8s-deploy@v5
+        with:
+           manifests: |
+              k8s/deployment.yaml
+           images: |
+              benattee/fakeshop-test:v${{ github.run_number }}
   
